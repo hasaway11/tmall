@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.tmall.dao.MemberDao">
+  <insert id="insert">
+    insert into member(username, password, email, profile, birthday) values(#{username}, #{password}, #{email}, #{profile}, #{birthday})
+  </insert>
+
+  <update id="update">
+    update member
+    <trim suffixOverrides="," prefix="set">
+      <if test="password!=null">password=#{password},</if>
+      <if test="profile!=null">profile=#{profile},</if>
+      <if test="level!=null">levels=#{level},</if>
+      <if test="orderCount!=0">order_count=#{orderCount},</if>
+      <if test="orderAmount!=0">order_amount=#{orderAmount},</if>
+    </trim>
+    where username=#{username}
+  </update>
+</mapper>

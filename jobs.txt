@@ -1,0 +1,75 @@
+ProfileController
+- p-01. 프사 업로드
+- p-02. 임시폴더에 저장된 프사 읽기
+- p-03. 프로필 폴더에 저장된 프사 읽기
+
+MemberController
+- m-01. 아이디 사용여부   (REST. GET /api/member/username/available)
+- m-03. 멤버회원 가입     (POST /member/join)
+- m-04. 아이디 찾기       (REST. GET /api/member/username)
+- m-05. 비밀번호 리셋     (REST. PATCH /api/member/password)
+- m-06. 비밀번호 확인     (/member/check-password)
+- m-07. 내정보 보기       (/member/read)
+- m-08. 비밀번호 변경     (/member/update-password)
+- m-09. 프로필 변경       (REST. PATCH /api/member/profile)
+- m-10. 레벨 업데이트      스케줄러 실행
+
+SellerController (/seller)
+- m-01. 아이디 사용여부
+- s-01. 셀러회원 가입      (POST /seller/join)
+- s-02. 회원 활성화        (GET /seller/activate)
+- s-03. 판매자 정보 보기   (GET /seller/read)
+- s-04. 판매자 정보 변경   (PATCH /seller/update)
+- s-05. 레벨 업데이트      스케줄러 실행
+
+ImageController
+- 13. 이미지 출력
+
+SellerProductController(/api/product)
+- 15. 상품 추가
+- 16. 상품 목록
+- 17. 상품 읽기
+- 18. 상품 변경
+- 19. 상품 삭제
+
+ProductController
+- 20. 상품 페이징
+- 21. 상품 읽기
+
+CartController(/api/cart)
+- 18. 상품 추가
+- 19. 장바구니 목록
+- 20. 상품 개수 증가
+- 21. 상품 개수 감소
+- 22. 상품 삭제
+
+OrderController(/api/order)
+- 23. 주문정보 확인
+- 24. 주문하기(배송지 포함)
+- 25. 주문결과 출력
+
+- 자신의 주문 목록 조회
+- 판매회원이 현재 진행 중인 주문 목록 조회
+- 판매회원이 자신의 통계 정보 조회
+
+Auth
+1. 토큰 유효성 검사 (/api/check)
+2. 토큰 갱신 (/api/refresh)
+
+Account
+3. 아이디 사용여부 확인 (/api/accounts/check-username)
+4. 아이디 찾기 (/api/accounts/find-username)
+5. 임시비밀번호 발급 (/api/accounts/reset-password)
+6. 비밀번호 확인 (/api/accounts/check-password)
+7. 비밀번호 변경 (/api/accounts/password)
+
+Member
+8. 일반회원 가입 (/api/members/new)
+9. 내 정보 보기 (/api/members)
+10. 프사 변경 (/api/members/profile)
+
+Seller
+11. 가입 확인코드 신청 (/api/email-verification/request)
+12. 확인코드 검증 (/api/email-verification/check)
+13. 셀러회원 가입 (/api/sellers/new)
+14. 판매자 정보 보기 (/api/sellers)

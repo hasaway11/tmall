@@ -1,0 +1,36 @@
+create user c##tmall identified by "1234";
+grant connect, resource to c##tmall;
+alter user c##tmall quota 100m on users;
+
+drop table member;
+drop table seller;
+
+create table member (
+  username varchar2(10 char) primary key,
+  password varchar2(60 char),
+  email varchar2(30 char),
+  join_day date default sysdate,
+  birthday date,
+  profile varchar2(15 char),
+  levels varchar2(15 char),
+  order_count number(8) default 0,
+  order_amount number(8) default 0
+);
+
+create table seller (
+  username varchar2(10 char),
+  password varchar2(60 char),
+  email varchar2(30 char),
+  introduction varchar2(200 char),
+  join_day date default sysdate,
+  levels varchar2(15 char),
+  sales_count number(8) default 0,
+  sales_amount number(8) default 0,
+  activated number(1) default 0,
+  check_code varchar2(10)
+);
+
+alter table seller add constraint seller_pk_username primary key(username);
+
+
+

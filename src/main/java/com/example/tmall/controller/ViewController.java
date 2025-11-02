@@ -1,0 +1,29 @@
+package com.example.tmall.controller;
+
+import org.springframework.security.access.annotation.*;
+import org.springframework.security.access.prepost.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class ViewController {
+  @PreAuthorize("isAnonymous()")
+  @GetMapping("/member/join")
+  public void memberJoin() { }
+
+  @PreAuthorize("isAnonymous()")
+  @GetMapping("/member/find")
+  public void find() { }
+
+  @GetMapping("/member/login")
+  public void memberLogin() { }
+
+  @Secured("ROLE_USER")
+  @GetMapping("/member/change-password")
+  public void changePassword() { }
+
+  @PreAuthorize("isAnonymous()")
+  @GetMapping("/seller/join")
+  public void sellerJoin() { }
+
+}

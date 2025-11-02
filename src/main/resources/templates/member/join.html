@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link rel="stylesheet" href="/global.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="/validate.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header th:replace="~{/fragment/header.html}"> </header>
+    <nav th:replace="~{/fragment/nav.html}"></nav>
+    <main>
+      <section>
+        <form action="/member/join" method="post" id="join-form" class="mt-3">
+          <!-- 업로드한 프로필 사진의 이름을 저장 -->
+          <input type="hidden" name="profile" id="profile-name">
+          <div style="height:240px;">
+            <img id="show-profile" style="height:240px; visibility:hidden;" alt="프로필 사진">
+          </div>
+          <div class="mt-3 mb-3">
+            <input type="file" id="profile" class="form-control" accept=".jpg, .jpeg, .png" onchange="showProfile();">
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">아이디:</label>
+            <input type="text" name="username" id="username" class="form-control" onfocusout="usernameCheck();">
+            <span id="username-msg" class="fail"></span>
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">비밀번호:</label>
+            <input type="password" name="password" id="password" class="form-control" onfocusout="passwordCheck($('password'));">
+            <span id="password-msg" class="fail"></span>
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">비밀번호 확인:</label>
+            <input type="password" id="password2" class="form-control" onfocusout="password2Check();">
+            <span id="password2-msg" class="fail"></span>
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">이메일:</label>
+            <input type="email" name="email" id="email" class="form-control" onfocusout="emailCheck();">
+            <span class="fail"></span>
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">생일:</label>
+            <input type="date" name="birthday" id="birthday" class="form-control" onfocusout="dateCheck('생일', $('#birthday'));">
+            <span class="fail"></span>
+          </div>
+          <div class="d-grid mt-5">
+            <button type="button" class="btn btn-outline-primary btn-block" onclick="doJoin();">가입하기</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer th:replace="~{/fragment/footer.html}"></footer>
+  </div>
+  <script>
+    async function showProfile() {
+      // 이미지가 1MB보다 크면 업로드 중단
+      const profile = document.getElementById('profile').files[0];
+      const maxSize = 1024*1024;
+      if(profile.size>maxSize) {
+        alert('프로필 사진은 1MB이하여야 합니다');
+        return;
+      }
+
+      // 자바스크립트에서 파일 업로드를 담당하는 객체인 FormData를 생성하는 방법
+      // - <form> 요소를 이용해 생성 : new FormData(document.getElementById(폼))
+      // - 빈 formData를 생성한 다음 append로 하나씩 추가
+      const formData = new FormData();
+      formData.append('profile', profile);
+      try {
+        const response = await axios.post('/api/profile/new', formData);
+        $('#show-profile').css('visibility','visible').attr('src', response.data.profileUrl);
+        $('#profile-name').val(response.data.profileName);
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    function password2Check() {
+      const password = $('#password').val();
+      const password2 = $('#password2').val();
+      const errorElement = $('#password2-msg');
+      errorElement.text('');
+
+      if(password2==='') {
+        errorElement.text('비밀번호 확인 : 필수입력입니다');
+        return false;
+      }
+      if(password!==password2) {
+        errorElement.text('비밀번호가 일치하지 않습니다');
+        return false;
+      }
+      return true;
+    }
+
+    function doJoin() {
+      const r1 = usernameCheck();
+      const r2 = passwordCheck($('#password'));
+      const r3 = password2Check();
+      const r4 = emailCheck();
+      const r5 = dateCheck("생일", $('#birthday'));
+      if((r1 && r2 && r3 && r4 && r5) === false)
+        return;
+
+      const formData = new FormData($("#join-form")[0]);
+      try {
+        await axios.post('/api/seller/new', formData);
+        alert("가입신청되었습니다. 이메일을 확인해 가입을 마무리하세요");
+        location.href = "/seller/login"
+      } catch(err) {
+        alert("회원 가입에 실패했습니다");
+        console.log(err);
+      }
+
+    }
+  </script>
+</body>
+</html>

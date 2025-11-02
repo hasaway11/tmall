@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.tmall.dao.SellerDao">
+  <insert id="insert">
+    insert into seller(username, password, email, introduction, check_code) values(#{username}, #{password}, #{email}, #{introduction}, #{checkCode})
+  </insert>
+
+  <update id="update">
+    update seller
+    <trim suffixOverrides="," prefix="set">
+      <if test="password!=null">password=#{password},</if>
+      <if test="introduction!=null">introduction=#{introduction},</if>
+      <if test="level!=null">levels=#{level},</if>
+      <if test="orderCount!=0">sales_count=#{salesCount},</if>
+      <if test="orderAmount!=0">sales_amount=#{salesAmount},</if>
+    </trim>
+    where username=#{username}
+  </update>
+
+  <update id="activate">
+    update seller set activated=1, check_code=null where check_code=#{checkCode}
+  </update>
+</mapper>
