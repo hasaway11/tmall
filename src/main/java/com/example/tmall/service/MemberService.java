@@ -64,7 +64,7 @@ public class MemberService {
     }
 
     String encodedPassword = passwordEncoder.encode(dto.getPassword());
-    dto.prePersist(encodedPassword, profile);
+    dto.prePersist(encodedPassword, profile, MemberLevel.BRONZE);
     memberDao.insert(dto);
   }
 
@@ -114,7 +114,7 @@ public class MemberService {
     return member.toReadDto();
   }
 
-  public void updatePassword(MemberDto.PasswordChangeRequest dto, String username) {
+  public void updatePassword(MemberDto.UpdatePasswordRequest dto, String username) {
     Member member = memberDao.findByUsername(username).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다"));
     if(!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword()))
       throw new JobFailException("비밀번호를 변경할 수 없습니다");

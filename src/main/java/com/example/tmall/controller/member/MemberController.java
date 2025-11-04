@@ -1,4 +1,4 @@
-package com.example.tmall.controller;
+package com.example.tmall.controller.member;
 
 import com.example.tmall.dto.*;
 import com.example.tmall.service.*;
@@ -48,7 +48,15 @@ public class MemberController {
     return ResponseEntity.ok("임시비밀번호를 가입 이메일로 보냈습니다");
   }
 
-  @Secured("ROLE_USER")
+  @Secured("ROLE_MEMBER")
+  @GetMapping("/member/check-password")
+  public String checkPassword(HttpSession session) {
+    if(session.getAttribute("passwordCheck")!=null)
+      return "redirect:/member/read";
+    return "member/check-password";
+  }
+
+  @Secured("ROLE_MEMBER")
   @PostMapping("/member/check-password")
   public ModelAndView checkPassword(@RequestParam @NotEmpty String password, Principal principal, RedirectAttributes ra, HttpSession session) {
     boolean checkSuccess = memberService.checkPassword(password, principal.getName());
@@ -61,7 +69,7 @@ public class MemberController {
     }
   }
 
-  @Secured("ROLE_USER")
+  @Secured("ROLE_MEMBER")
   @GetMapping("/member/read")
   public ModelAndView read(Principal principal, HttpSession session) {
     if(session.getAttribute("passwordCheck")==null)
@@ -70,9 +78,9 @@ public class MemberController {
     return new ModelAndView("member/read").addObject("member", dto);
   }
 
-  @PreAuthorize("isAuthenticated()")
+  @Secured("ROLE_MEMBER")
   @PostMapping("/member/update-password")
-  public ModelAndView updatePassword(@ModelAttribute @Valid MemberDto.PasswordChangeRequest dto, Principal principal) {
+  public ModelAndView updatePassword(@ModelAttribute @Valid MemberDto.UpdatePasswordRequest dto, Principal principal) {
     memberService.updatePassword(dto, principal.getName());
     return new ModelAndView("redirect:/");
   }

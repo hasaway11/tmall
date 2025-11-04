@@ -27,6 +27,6 @@ public class Member {
     String joinDayStr = dtf.format(this.joinDay);
     String birthdayStr = dtf.format(this.birthday);
     long days = ChronoUnit.DAYS.between(joinDay, LocalDate.now());
-    return new MemberDto.MemberResponse(username, email, "/profile/" + profile, profile, joinDayStr, birthdayStr, days, level.name());
+    return new MemberDto.MemberResponse(email, "/api/profile/" + profile, profile, joinDayStr, birthdayStr, days, level.getLabel());
   }
 }

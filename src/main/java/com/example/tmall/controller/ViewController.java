@@ -18,12 +18,10 @@ public class ViewController {
   @GetMapping("/member/login")
   public void memberLogin() { }
 
-  @Secured("ROLE_USER")
-  @GetMapping("/member/change-password")
-  public void changePassword() { }
+  @Secured("ROLE_MEMBER")
+  @GetMapping("/member/update-password")
+  public void updatePassword() { }
 
-  @PreAuthorize("isAnonymous()")
   @GetMapping("/seller/join")
   public void sellerJoin() { }
-
 }

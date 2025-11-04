@@ -5,6 +5,11 @@
     insert into member(username, password, email, profile, birthday) values(#{username}, #{password}, #{email}, #{profile}, #{birthday})
   </insert>
 
+  <select id="findByUsername" resultType="com.example.tmall.entity.account.Member">
+    select username, password, email, join_day, birthday, profile, levels as "level", order_count, order_amount
+    from member where username=#{username}
+  </select>
+
   <update id="update">
     update member
     <trim suffixOverrides="," prefix="set">

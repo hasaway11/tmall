@@ -1,5 +1,6 @@
 package com.example.tmall.dto;
 
+import com.example.tmall.entity.account.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.*;
@@ -28,10 +29,12 @@ public class MemberDto {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate birthday;
     private String profile;
+    private MemberLevel level;
 
-    public void prePersist(String encodedPassword, String profile) {
+    public void prePersist(String encodedPassword, String profile, MemberLevel level) {
       this.password = encodedPassword;
       this.profile = profile;
+      this.level = level;
     }
   }
 
@@ -43,7 +46,7 @@ public class MemberDto {
   }
 
   @Data
-  public static class PasswordChangeRequest {
+  public static class UpdatePasswordRequest {
     @NotEmpty(message="기존 비밀번호는 필수입력입니다")
     @Pattern(regexp="^[a-zA-Z0-9]{6,10}$", message="현재 비밀번호는 영숫자 6~10자입니다")
     private String currentPassword;
@@ -56,7 +59,6 @@ public class MemberDto {
   @Data
   @AllArgsConstructor
   public static class MemberResponse {
-    private String username;
     private String email;
     private String profileUrl;
     private String profileName;

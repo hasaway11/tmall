@@ -14,7 +14,7 @@ public class MailUtil {
   public void sendMail(String from, String to, String title, String text) {
     MimeMessage message = mailSender.createMimeMessage();
     try {
-      MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
+      MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
       helper.setFrom(from);
       helper.setTo(to);
       helper.setSubject(title);

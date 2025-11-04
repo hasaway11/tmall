@@ -13,10 +13,9 @@ public interface MemberDao {
 
   int insert(MemberDto.CreateRequest member);
 
-  @Select("select * from member username=#{username}")
   Optional<Member> findByUsername(String username);
 
-  @Select("select username from member email=#{email}")
+  @Select("select username from member where email=#{email}")
   Optional<String> findUsernameByEmail(String email);
 
   int update(Member member);

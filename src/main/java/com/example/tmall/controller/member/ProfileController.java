@@ -1,4 +1,4 @@
-package com.example.tmall.controller;
+package com.example.tmall.controller.member;
 
 import com.example.tmall.service.*;
 import com.example.tmall.util.*;

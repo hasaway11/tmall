@@ -14,8 +14,15 @@
           <li class="nav-item"><a class="nav-link" href="/member/login">로그인</a></li>
           <li class="nav-item"><a class="nav-link" href="/member/find">아이디/비번 찾기</a></li>
           <li class="nav-item"><a class="nav-link" href="/">게시판</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">판매회원</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/seller/join">가입하기</a></li>
+              <li><a class="dropdown-item" href="/seller/login">로그인</a></li>
+            </ul>
+          </li>
         </ul>
-        <ul class="navbar-nav me-auto" sec:authorize="hasRole('USER')">
+        <ul class="navbar-nav me-auto" sec:authorize="hasRole('MEMBER')">
           <li class="nav-item"><a class="nav-link" href="/member/read">내 정보</a></li>
           <li class="nav-item"><a class="nav-link" href="/post/write">글쓰기</a></li>
           <li class="nav-item"><a class="nav-link" href="#" onclick="doLogout();">로그아웃</a></li>
@@ -31,7 +38,7 @@
   <script>
     function doLogout() {
       const form = `
-        <form action="/member/logout" method="post">
+        <form action="/logout" method="post">
         </form>
       `;
       $(form).appendTo($('body')).submit();

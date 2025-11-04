@@ -1,5 +1,6 @@
 package com.example.tmall.dto;
 
+import com.example.tmall.entity.account.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -24,9 +25,12 @@ public class SellerDto {
 
     private String checkCode;
 
-    public void prePersist(String encodedPassword, String checkCode) {
+    private SellerLevel level;
+
+    public void prePersist(String encodedPassword, String checkcode, SellerLevel level) {
       this.password = encodedPassword;
-      this.checkCode = checkCode;
+      this.checkCode = checkcode;
+      this.level = level;
     }
   }
 }

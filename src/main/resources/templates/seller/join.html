@@ -17,32 +17,24 @@
     <main>
       <section>
         <form action="/seller/join" method="post" id="join-form" class="mt-3">
-          <!-- 업로드한 프로필 사진의 이름을 저장 -->
-          <input type="hidden" name="profile" id="profile-name">
-          <div style="height:240px;">
-            <img id="show-profile" style="height:240px; visibility:hidden;" alt="프로필 사진">
-          </div>
-          <div class="mt-3 mb-3">
-            <input type="file" id="profile" class="form-control" accept=".jpg, .jpeg, .png" onchange="showProfile();">
-          </div>
           <div class="mt-3 mb-3">
             <label class="form-label">아이디:</label>
-            <input type="text" name="username" id="username" class="form-control" onfocusout="usernameCheck();">
+            <input type="text" name="username" id="username" class="form-control" onfocusout="checkUsername();">
             <span id="username-msg" class="fail"></span>
           </div>
           <div class="mt-3 mb-3">
             <label class="form-label">비밀번호:</label>
-            <input type="password" name="password" id="password" class="form-control" onfocusout="passwordCheck($('password'));">
+            <input type="password" name="password" id="password" class="form-control" onfocusout="checkPassword($('password'));">
             <span id="password-msg" class="fail"></span>
           </div>
           <div class="mt-3 mb-3">
             <label class="form-label">비밀번호 확인:</label>
-            <input type="password" id="password2" class="form-control" onfocusout="password2Check();">
+            <input type="password" id="password2" class="form-control" onfocusout="checkPassword2();">
             <span id="password2-msg" class="fail"></span>
           </div>
           <div class="mt-3 mb-3">
             <label class="form-label">이메일:</label>
-            <input type="email" name="email" id="email" class="form-control" onfocusout="emailCheck();">
+            <input type="email" name="email" id="email" class="form-control" onfocusout="checkEmail();">
             <span class="fail"></span>
           </div>
           <div class="mt-3 mb-3">
@@ -59,15 +51,21 @@
     <footer th:replace="~{/fragment/footer.html}"></footer>
   </div>
   <script>
-
-    function doJoin() {
-      const r1 = usernameCheck();
-      const r2 = passwordCheck($('#password'));
-      const r3 = password2Check();
-      const r4 = emailCheck();
+    async function doJoin() {
+      const r1 = checkUsername();
+      const r2 = checkPassword($('#password'));
+      const r3 = checkPassword2();
+      const r4 = checkEmail();
       if((r1 && r2 && r3 && r4) === false)
         return;
-      $('#join-form').submit();
+      const formData = new FormData($("#join-form")[0]);
+      try {
+        await axios.post('/api/seller/new', formData);
+        alert("가입신청되었습니다. 이메일을 확인해 가입을 마무리하세요");
+      } catch(err) {
+        alert("회원 가입에 실패했습니다");
+        console.log(err);
+      }
     }
   </script>
 </body>

@@ -27,7 +27,7 @@ function check(engName, korName, $element) {
 };
 
 // 아이디 찾기, 로그인에서 "아이디" 입력여부와 패턴을 확인할 함수
-function usernameCheck() {
+function checkUsername() {
   return check('username', '아이디', $('#username'));
 }
 
@@ -47,20 +47,37 @@ async function checkUsernameWithAvailability() {
   }
 }
 
-function passwordCheck($target) {
+function checkPassword($target) {
   return check('password', '비밀번호', $target);
 }
 
-function emailCheck() {
+function checkEmail() {
   return check('email', '이메일', $('#email'));
 }
 
-function nullCheck(korName, $target) {
+function checkForNull(korName, $target) {
   const $errorElement = $target.next();
   const value = $target.val();
   $errorElement.text('');
   if(value==='') {
     $errorElement.text(korName + ': 필수입력입니다');
+    return false;
+  }
+  return true;
+}
+
+function checkPassword2() {
+  const password = $('#password').val();
+  const password2 = $('#password2').val();
+  const errorElement = $('#password2-msg');
+  errorElement.text('');
+
+  if(password2==='') {
+    errorElement.text('비밀번호 확인 : 필수입력입니다');
+    return false;
+  }
+  if(password!==password2) {
+    errorElement.text('비밀번호가 일치하지 않습니다');
     return false;
   }
   return true;

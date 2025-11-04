@@ -23,7 +23,7 @@ public class MemberDaoTest {
 
 //  @Test
   public void insertTest() {
-    MemberDto.CreateRequest dto = new MemberDto.CreateRequest("spring", "1234", "spring@naver.com", LocalDate.now(), "spring.jpg");
+    MemberDto.CreateRequest dto = new MemberDto.CreateRequest("spring", "1234", "spring@naver.com", LocalDate.now(), "spring.jpg", MemberLevel.BRONZE);
     memberDao.insert(dto);
   }
 
