@@ -21,8 +21,6 @@ public class SellerProductDto {
     private long price;
     @NotNull
     private long stock;
-    @NotNull
-    private long category;
   }
 
   @Data
