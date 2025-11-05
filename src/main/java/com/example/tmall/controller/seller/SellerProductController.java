@@ -9,17 +9,20 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.*;
 
-@Secured(("ROLE_SELLER"))
+@Secured("ROLE_SELLER")
 @Controller
 public class SellerProductController {
   @Autowired
   private ProductService service;
 
   @GetMapping("/seller/product/register")
-  public void register() { }
+  public String register() {
+    return "product/register";
+  }
 
-  @GetMapping("/api/seller/products/new")
-  public ResponseEntity register(SellerProductDto.Create dto) {
+  @PostMapping("/seller/product/register")
+  public ModelAndView register(SellerProductDto.Create dto) {
+    System.out.println(dto);
     return null;
   }
 

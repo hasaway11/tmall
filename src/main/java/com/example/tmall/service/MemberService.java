@@ -5,8 +5,6 @@ import com.example.tmall.dto.*;
 import com.example.tmall.entity.account.*;
 import com.example.tmall.exception.*;
 import com.example.tmall.util.*;
-import jakarta.validation.*;
-import jakarta.validation.constraints.*;
 import org.apache.commons.lang3.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.security.crypto.password.*;
@@ -38,7 +36,7 @@ public class MemberService {
     if(profile==null || profile.isEmpty()) {
       useDefaultProfile = true;
     } else {
-      source = new File(ProfileUtil.TEMP_FOLDER, profile);
+      source = new File(ImageUtil.TEMP_FOLDER, profile);
       if (source.exists() == false) {
         useDefaultProfile = true;
       }
@@ -46,13 +44,13 @@ public class MemberService {
 
     if(useDefaultProfile) {
       profile = "default.webp";
-      source = new File(ProfileUtil.PROFILE_FOLDER, profile);
+      source = new File(ImageUtil.PROFILE_FOLDER, profile);
     }
 
     int indexOfLastDot = profile.lastIndexOf(".");
     String extension = profile.substring(indexOfLastDot);
     profile = dto.getUsername() + extension;
-    File dest = new File(ProfileUtil.PROFILE_FOLDER, profile);
+    File dest = new File(ImageUtil.PROFILE_FOLDER, profile);
 
     try {
       FileCopyUtils.copy(source, dest);
@@ -71,15 +69,15 @@ public class MemberService {
   public void updateProfile(String profile, String username) {
     // 현재 프사를 삭제 + 사용자 정보가 없을 경우 예외 발생
     Member member = memberDao.findByUsername(username).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다"));
-    File currentProfile = new File(ProfileUtil.PROFILE_FOLDER, member.getProfile());
+    File currentProfile = new File(ImageUtil.PROFILE_FOLDER, member.getProfile());
     if(currentProfile.exists())
       currentProfile.delete();
 
     // 새로 저장할 프사의 이름을 계산
-    File origin = new File(ProfileUtil.TEMP_FOLDER, profile);
+    File origin = new File(ImageUtil.TEMP_FOLDER, profile);
     String ext = profile.substring(profile.lastIndexOf("."));
     String newProfileName = username + ext;
-    File dest = new File(ProfileUtil.PROFILE_FOLDER, newProfileName);
+    File dest = new File(ImageUtil.PROFILE_FOLDER, newProfileName);
 
     // 새로운 프사를 저장
     try {

@@ -21,6 +21,10 @@ public class SellerProductDto {
     private long price;
     @NotNull
     private long stock;
+
+    public Product toEntity(String username) {
+      return null;
+    }
   }
 
   @Data

@@ -68,3 +68,7 @@ create table reviews (
 alter table reviews add constraint reviews_pk_rno primary key(rno);
 alter table reviews add constraint reviews_fk_pno foreign key(pno) references product(pno);
 
+create sequence product_seq;
+create sequence reviews_seq;
+
+

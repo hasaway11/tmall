@@ -20,24 +20,11 @@ public class ProfileController {
   @Autowired
   private MemberService memberService;
 
-  @PostConstruct
-  public void makeFolder() {
-    File uploadFolder = new File(ProfileUtil.UPLOAD_FOLDER);
-    File tempFolder = new File(ProfileUtil.TEMP_FOLDER);
-    File profileFolder = new File(ProfileUtil.PROFILE_FOLDER);
-    if(!uploadFolder.exists())
-      uploadFolder.mkdir();
-    if(!tempFolder.exists())
-      tempFolder.mkdir();
-    if(!profileFolder.exists())
-      profileFolder.mkdir();
-  }
-
   @PostMapping("/api/profile/new")
   public ResponseEntity<Map<String, String>> uploadProfile(MultipartFile profile) {
     try {
       if (profile != null && !profile.isEmpty()) {
-        File dest = new File(ProfileUtil.TEMP_FOLDER, profile.getOriginalFilename());
+        File dest = new File(ImageUtil.TEMP_FOLDER, profile.getOriginalFilename());
         profile.transferTo(dest);
       }
     } catch(IOException e) {
@@ -52,7 +39,7 @@ public class ProfileController {
     try {
       File file = new File(folderName, fileName);
       byte[] imageBytes = Files.readAllBytes(file.toPath());
-      MediaType mediaType = ProfileUtil.getMediaType(fileName);
+      MediaType mediaType = ImageUtil.getMediaType(fileName);
       return ResponseEntity.ok().contentType(mediaType).body(imageBytes);
     } catch (IOException e) {
       return ResponseEntity.notFound().build();
@@ -61,12 +48,12 @@ public class ProfileController {
 
   @GetMapping("/api/temp/{fileName}")
   public ResponseEntity<byte[]> getTempProfile(@PathVariable String fileName) {
-    return readProfile(fileName, ProfileUtil.TEMP_FOLDER);
+    return readProfile(fileName, ImageUtil.TEMP_FOLDER);
   }
 
   @GetMapping("/api/profile/{fileName}")
   public ResponseEntity<byte[]> getProfile(@PathVariable String fileName) {
-    return readProfile(fileName, ProfileUtil.PROFILE_FOLDER);
+    return readProfile(fileName, ImageUtil.PROFILE_FOLDER);
   }
 
   @PreAuthorize("isAuthenticated()")
