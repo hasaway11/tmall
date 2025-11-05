@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 public class Product {
-  private long productId;
+  private long pno;
   private String seller;
   private String name;
   private String info;

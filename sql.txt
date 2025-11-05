@@ -32,5 +32,39 @@ create table seller (
 
 alter table seller add constraint seller_pk_username primary key(username);
 
+create table product (
+  pno number(7),
+  seller varchar2(10 char),
+  name varchar2(50 char),
+  info clob,
+  price number(7),
+  sales_volume number(7),
+  sales_amount number(7),
+  total_star number(7),
+  review_count number(7),
+  stock number(7)
+);
 
+alter table product add constraint product_pk_pno primary key(pno);
+
+create table product_image (
+  ino number(7),
+  name varchar2(50 char),
+  pno number(7)
+);
+
+alter table product_image add constraint product_image_pk_ino primary key(ino);
+alter table product_image add constraint product_image_fk_pno foreign key(pno) references product(pno);
+
+create table reviews (
+  rno number(7),
+  writer varchar2(10 char),
+  content varchar2(50 char),
+  rating number(7),
+  write_time date,
+  pno number(7)
+);
+
+alter table reviews add constraint reviews_pk_rno primary key(rno);
+alter table reviews add constraint reviews_fk_pno foreign key(pno) references product(pno);
 
