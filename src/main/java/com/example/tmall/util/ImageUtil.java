@@ -5,6 +5,7 @@ import org.springframework.http.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,17 @@ public class ImageUtil {
   public static final String TEMP_FOLDER = System.getProperty("user.dir") + File.separator + "upload" + File.separator + "temp" + File.separator;
   public static final String PROFILE_FOLDER = System.getProperty("user.dir") + File.separator + "upload" + File.separator + "profile" + File.separator;
   public static final String PRODUCT_FOLDER = System.getProperty("user.dir") + File.separator + "upload" + File.separator + "product" + File.separator;
+
+  public static ResponseEntity<byte[]> readProfile(String fileName, String folderName) {
+    try {
+      File file = new File(folderName, fileName);
+      byte[] imageBytes = Files.readAllBytes(file.toPath());
+      MediaType mediaType = ImageUtil.getMediaType(fileName);
+      return ResponseEntity.ok().contentType(mediaType).body(imageBytes);
+    } catch (IOException e) {
+      return ResponseEntity.notFound().build();
+    }
+  }
 
   public static MediaType getMediaType(String imageName) {
     String mimeType = "image/jpeg";

@@ -5,6 +5,9 @@ import lombok.*;
 import java.time.*;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Seller {
   private String username;
   private String password;
@@ -15,5 +18,6 @@ public class Seller {
   private long salesCount;
   private long salesAmount;
   private boolean activated;
-  private String check_code;
+  private String checkcode;
+
 }

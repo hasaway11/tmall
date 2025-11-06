@@ -5,6 +5,7 @@ import com.example.tmall.dto.*;
 import com.example.tmall.entity.account.*;
 import com.example.tmall.exception.*;
 import com.example.tmall.util.*;
+import org.apache.commons.io.*;
 import org.apache.commons.lang3.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.security.crypto.password.*;
@@ -30,28 +31,29 @@ public class MemberService {
 
   public void join(MemberDto.CreateRequest dto) {
     boolean useDefaultProfile = false;
-    String profile = dto.getProfile();
+    String uploadProfileName = dto.getProfile();
+    String 프로필_이름 = "";
     File source = null;
 
-    if(profile==null || profile.isEmpty()) {
+    // 기본 프사를 사용하는 상황인지 체크
+    if(uploadProfileName==null || uploadProfileName.isEmpty()) {
       useDefaultProfile = true;
     } else {
-      source = new File(ImageUtil.TEMP_FOLDER, profile);
+      source = new File(ImageUtil.TEMP_FOLDER, uploadProfileName);
       if (source.exists() == false) {
         useDefaultProfile = true;
       }
     }
 
+    // 프로필을 복사하기 위해 원본과 복사본 파일을 준바
     if(useDefaultProfile) {
-      profile = "default.webp";
-      source = new File(ImageUtil.PROFILE_FOLDER, profile);
+      프로필_이름 = ImageUtil.DEFAULT_PROFILE;
+      source = new File(ImageUtil.PROFILE_FOLDER, 프로필_이름);
     }
+    프로필_이름 = dto.getUsername() + FilenameUtils.getExtension(uploadProfileName);
+    File dest = new File(ImageUtil.PROFILE_FOLDER, 프로필_이름);
 
-    int indexOfLastDot = profile.lastIndexOf(".");
-    String extension = profile.substring(indexOfLastDot);
-    profile = dto.getUsername() + extension;
-    File dest = new File(ImageUtil.PROFILE_FOLDER, profile);
-
+    // 파일을 이동 후 원본을 삭제
     try {
       FileCopyUtils.copy(source, dest);
       if(!useDefaultProfile) {
@@ -62,11 +64,10 @@ public class MemberService {
     }
 
     String encodedPassword = passwordEncoder.encode(dto.getPassword());
-    dto.prePersist(encodedPassword, profile, MemberLevel.BRONZE);
-    memberDao.insert(dto);
+    memberDao.insert(dto.toEntity(encodedPassword, 프로필_이름, MemberLevel.BRONZE));
   }
 
-  public void updateProfile(String profile, String username) {
+  public void changeProfile(String uploadProfileName, String username) {
     // 현재 프사를 삭제 + 사용자 정보가 없을 경우 예외 발생
     Member member = memberDao.findByUsername(username).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다"));
     File currentProfile = new File(ImageUtil.PROFILE_FOLDER, member.getProfile());
@@ -74,12 +75,11 @@ public class MemberService {
       currentProfile.delete();
 
     // 새로 저장할 프사의 이름을 계산
-    File origin = new File(ImageUtil.TEMP_FOLDER, profile);
-    String ext = profile.substring(profile.lastIndexOf("."));
-    String newProfileName = username + ext;
+    File origin = new File(ImageUtil.TEMP_FOLDER, uploadProfileName);
+    String newProfileName = username + FilenameUtils.getExtension(uploadProfileName);
     File dest = new File(ImageUtil.PROFILE_FOLDER, newProfileName);
 
-    // 새로운 프사를 저장
+    // 파일 이동
     try {
       Files.move(origin.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
     } catch (IOException e) {
@@ -102,7 +102,7 @@ public class MemberService {
     mailUtil.sendMail("admin@icia.com", member.getEmail(), "임시비밀번호", html);
   }
 
-  public boolean checkPassword(String password, String username) {
+  public boolean verifyPassword(String password, String username) {
     Member member = memberDao.findByUsername(username).orElseThrow(()->new NoSuchElementException("사용자를 찾을 수 없습니다"));
     return passwordEncoder.matches(password, member.getPassword());
   }

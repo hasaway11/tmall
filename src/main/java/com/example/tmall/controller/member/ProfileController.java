@@ -3,6 +3,7 @@ package com.example.tmall.controller.member;
 import com.example.tmall.service.*;
 import com.example.tmall.util.*;
 import jakarta.annotation.*;
+import jakarta.validation.constraints.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.*;
@@ -21,45 +22,34 @@ public class ProfileController {
   private MemberService memberService;
 
   @PostMapping("/api/profile/new")
-  public ResponseEntity<Map<String, String>> uploadProfile(MultipartFile profile) {
+  public ResponseEntity<Map<String, String>> 프로필_사진_업로드(MultipartFile profile) {
     try {
       if (profile != null && !profile.isEmpty()) {
         File dest = new File(ImageUtil.TEMP_FOLDER, profile.getOriginalFilename());
         profile.transferTo(dest);
       }
     } catch(IOException e) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+      return ResponseEntity.status(409).body(null);
     }
     String profileName = profile.getOriginalFilename();
     Map<String,String> map = Map.of("profileUrl", "/api/temp/" + profileName, "profileName", profileName);
     return ResponseEntity.ok(map);
   }
 
-  private ResponseEntity<byte[]> readProfile(String fileName, String folderName) {
-    try {
-      File file = new File(folderName, fileName);
-      byte[] imageBytes = Files.readAllBytes(file.toPath());
-      MediaType mediaType = ImageUtil.getMediaType(fileName);
-      return ResponseEntity.ok().contentType(mediaType).body(imageBytes);
-    } catch (IOException e) {
-      return ResponseEntity.notFound().build();
-    }
-  }
-
   @GetMapping("/api/temp/{fileName}")
   public ResponseEntity<byte[]> getTempProfile(@PathVariable String fileName) {
-    return readProfile(fileName, ImageUtil.TEMP_FOLDER);
+    return ImageUtil.readProfile(fileName, ImageUtil.TEMP_FOLDER);
   }
 
   @GetMapping("/api/profile/{fileName}")
   public ResponseEntity<byte[]> getProfile(@PathVariable String fileName) {
-    return readProfile(fileName, ImageUtil.PROFILE_FOLDER);
+    return ImageUtil.readProfile(fileName, ImageUtil.PROFILE_FOLDER);
   }
 
   @PreAuthorize("isAuthenticated()")
   @PatchMapping("/api/member/profile")
-  public ResponseEntity<String> changeProfile(@RequestParam String profile, Principal principal) {
-    memberService.updateProfile(profile, principal.getName());
+  public ResponseEntity<String> changeProfile(@RequestParam @NotEmpty String profile, Principal principal) {
+    memberService.changeProfile(profile, principal.getName());
     return ResponseEntity.ok("프로필 사진을 변경했습니다");
   }
 }

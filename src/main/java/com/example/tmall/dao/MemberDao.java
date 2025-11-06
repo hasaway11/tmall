@@ -11,7 +11,7 @@ public interface MemberDao {
   @Select("select count(*) from member where username=#{username} and rownum=1")
   boolean existsByUsername(String username);
 
-  int insert(MemberDto.CreateRequest member);
+  int insert(Member member);
 
   Optional<Member> findByUsername(String username);
 

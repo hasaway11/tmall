@@ -11,7 +11,7 @@ public interface SellerDao {
   @Select("select count(*) from seller where username=#{username} and rownum=1")
   boolean existsByUsername(String username);
 
-  int insert(SellerDto.CreateRequest dto);
+  int insert(Seller seller);
 
   @Select("select * from seller where username=#{username}")
   Optional<Seller> findByUsername(String username);

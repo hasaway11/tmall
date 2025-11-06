@@ -23,14 +23,13 @@ public class SellerDto {
 
     private String introduction;
 
-    private String checkCode;
+    private String checkcode;
 
     private SellerLevel level;
 
-    public void prePersist(String encodedPassword, String checkcode, SellerLevel level) {
-      this.password = encodedPassword;
-      this.checkCode = checkcode;
-      this.level = level;
+    public Seller toEntity(String encodedPassword, String checkcode, SellerLevel sellerLevel) {
+      return Seller.builder().username("c##" + username).password(encodedPassword).email(email).introduction(introduction)
+          .checkcode(checkcode).level(sellerLevel).build();
     }
   }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.tmall.dao.ProductDao">
+  <resultMap id="productDetailMap" type="com.example.tmall.dto.ProductDto$ReadResponse">
+    <id property="pno" column="pno" />
+    <result property="name" column="name" />
+    <result property="info" column="info" />
+    <result property="price" column="price" />
+    <result property="stock" column="stock" />
+    <result property="seller" column="seller" />
+    <result property="reviewCount" column="review_count" />
+    <result property="totalRating" column="total_rating" />
+    <collection property="images" ofType="string" column="image_name" notNullColumn="image_name"/>
+    <collection property="reviews" ofType="com.example.tmall.entity.product.Review">
+      <id property="rno" column="rno" />
+      <result property="writer" column="rwriter" />
+      <result property="content" column="rcontent" />
+      <result property="rating" column="rrating" />
+      <result property="writeTime" column="rwrite_time" />
+    </collection>
+  </resultMap>
+  <select id="findByPno" resultMap="productDetailMap">
+    select p.pno, p.name, p.info, p.price, p.stock, p.seller, pi.name as image_name,
+    count(r.rno) over (partition by p.pno) as review_count,
+    nvl(sum(r.rating) over (partition by p.pno),0) as total_rating,
+    r.rno, r.writer as rwriter, r.content as rcontent, r.rating as rrating, r.write_time as rwrite_time
+    from product p left join product_image pi on p.pno=pi.pno left join review r on p.pno=r.pno
+    where p.pno=#{pno}
+  </select>
+</mapper>

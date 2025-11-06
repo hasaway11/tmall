@@ -31,10 +31,9 @@ public class MemberDto {
     private String profile;
     private MemberLevel level;
 
-    public void prePersist(String encodedPassword, String profile, MemberLevel level) {
-      this.password = encodedPassword;
-      this.profile = profile;
-      this.level = level;
+    public Member toEntity(String encodedPassword, String profile, MemberLevel memberLevel) {
+      return Member.builder().username(username).password(encodedPassword).email(email).birthday(birthday)
+          .profile(profile).level(memberLevel).build();
     }
   }
 

@@ -20,18 +20,16 @@ public class ProductDto {
     private long reviewCount;
   }
 
-  @AllArgsConstructor
-  @NoArgsConstructor
-  @Getter
+  @Data
   public static class ReadResponse {
-    private long id;
+    private long pno;
     private String name;
     private String info;
     private long price;
     private long reviewCount;
     private long stock;
     private String seller;
-    private Double rating;
+    private long totalRating;
     private List<String> images;
     private List<Review> reviews;
   }

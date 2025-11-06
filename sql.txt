@@ -5,6 +5,9 @@ alter user c##tmall quota 100m on users;
 drop table member;
 drop table seller;
 
+drop sequence review_seq;
+
+
 create table member (
   username varchar2(10 char) primary key,
   password varchar2(60 char),
@@ -18,7 +21,7 @@ create table member (
 );
 
 create table seller (
-  username varchar2(10 char),
+  username varchar2(15 char),
   password varchar2(60 char),
   email varchar2(30 char),
   introduction varchar2(200 char),
@@ -41,7 +44,6 @@ create table product (
   sales_volume number(7),
   sales_amount number(7),
   total_star number(7),
-  review_count number(7),
   stock number(7)
 );
 
@@ -56,7 +58,7 @@ create table product_image (
 alter table product_image add constraint product_image_pk_ino primary key(ino);
 alter table product_image add constraint product_image_fk_pno foreign key(pno) references product(pno);
 
-create table reviews (
+create table review (
   rno number(7),
   writer varchar2(10 char),
   content varchar2(50 char),
@@ -65,10 +67,9 @@ create table reviews (
   pno number(7)
 );
 
-alter table reviews add constraint reviews_pk_rno primary key(rno);
-alter table reviews add constraint reviews_fk_pno foreign key(pno) references product(pno);
+alter table review add constraint review_pk_rno primary key(rno);
+alter table review add constraint review_fk_pno foreign key(pno) references product(pno);
 
-create sequence product_seq;
-create sequence reviews_seq;
+create sequence review_seq;
 
 

@@ -21,8 +21,7 @@ public class SellerService {
   public void join(SellerDto.CreateRequest dto) {
     String encodedPassword = passwordEncoder.encode(dto.getPassword());
     String checkcode = RandomStringUtils.secure().nextAlphanumeric(10);
-    dto.prePersist(encodedPassword, checkcode, SellerLevel.POWER);
-    sellerDao.insert(dto);
+    sellerDao.insert(dto.toEntity(encodedPassword, checkcode, SellerLevel.POWER));
     String text = "<a href='http://localhost:8080/seller/verify-checkcode?checkcode=" + checkcode + "'>클릭하세요</a>";
     mailUtil.sendMail("admin@icia.com", dto.getEmail(), "가입확인 메일입니다", text);
   }

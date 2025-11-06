@@ -23,7 +23,7 @@ public class MemberController {
 
   @PreAuthorize("isAnonymous()")
   @GetMapping("/api/member/check-username")
-  public ResponseEntity<Void> checkUsername(@RequestParam @NotEmpty String username) {
+  public ResponseEntity<Void> 아이디_사용여부_확인(@RequestParam @NotEmpty String username) {
     boolean result = memberService.checkUsername(username);
     return result? ResponseEntity.ok(null) : ResponseEntity.status(HttpStatus.CONFLICT).body(null);
   }
@@ -37,7 +37,7 @@ public class MemberController {
 
   @PreAuthorize("isAnonymous()")
   @GetMapping("/api/member/username")
-  public ResponseEntity<String> findUsername(@RequestParam @NotEmpty @Email String email) {
+  public ResponseEntity<String> 아이디_찾기(@RequestParam @NotEmpty @Email String email) {
     return ResponseEntity.ok(memberService.findUsername(email));
   }
 
@@ -49,31 +49,31 @@ public class MemberController {
   }
 
   @Secured("ROLE_MEMBER")
-  @GetMapping("/member/check-password")
-  public String checkPassword(HttpSession session) {
-    if(session.getAttribute("passwordCheck")!=null)
+  @GetMapping("/member/verify-password")
+  public String verifyPassword(HttpSession session) {
+    if(session.getAttribute("isPasswordVerified")!=null)
       return "redirect:/member/read";
-    return "member/check-password";
+    return "member/vefify-password";
   }
 
   @Secured("ROLE_MEMBER")
-  @PostMapping("/member/check-password")
+  @PostMapping("/member/verify-password")
   public ModelAndView checkPassword(@RequestParam @NotEmpty String password, Principal principal, RedirectAttributes ra, HttpSession session) {
-    boolean checkSuccess = memberService.checkPassword(password, principal.getName());
-    if(checkSuccess) {
-      session.setAttribute("passwordCheck", true);
+    boolean isPasswordVerified = memberService.verifyPassword(password, principal.getName());
+    if(isPasswordVerified) {
+      session.setAttribute("isPasswordVerified", true);
       return new ModelAndView("redirect:/member/read");
     } else {
       ra.addFlashAttribute("msg", "사용자를 확인하지 못했습니다");
-      return new ModelAndView("redirect:/member/check-password");
+      return new ModelAndView("redirect:/member/vefify-password");
     }
   }
 
   @Secured("ROLE_MEMBER")
   @GetMapping("/member/read")
   public ModelAndView read(Principal principal, HttpSession session) {
-    if(session.getAttribute("passwordCheck")==null)
-      return new ModelAndView("redirect:/member/check-password");
+    if(session.getAttribute("isPasswordVerified")==null)
+      return new ModelAndView("redirect:/member/verify-password");
     MemberDto.MemberResponse dto = memberService.read(principal.getName());
     return new ModelAndView("member/read").addObject("member", dto);
   }
@@ -84,5 +84,4 @@ public class MemberController {
     memberService.updatePassword(dto, principal.getName());
     return new ModelAndView("redirect:/");
   }
-
 }

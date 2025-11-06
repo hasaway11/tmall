@@ -15,10 +15,7 @@ public class SellerProductController {
   @Autowired
   private ProductService service;
 
-  @GetMapping("/seller/product/register")
-  public String register() {
-    return "product/register";
-  }
+
 
   @PostMapping("/seller/product/register")
   public ModelAndView register(SellerProductDto.Create dto) {

@@ -24,4 +24,9 @@ public class ViewController {
 
   @GetMapping("/seller/join")
   public void sellerJoin() { }
+
+  @GetMapping("/seller/product/register")
+  public String register() {
+    return "product/register";
+  }
 }
